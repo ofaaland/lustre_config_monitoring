@@ -22,12 +22,19 @@ diag_handle_args "$@"
 # dont run if no zfs gender
 ( ! nodeattr -v zfs ) && diag_plan_skip "not configured"
 
-# find lustre datasets
+# Test Lustre datasets only; identified by property lustre:svname
 datasets=`zfs list -o name,lustre:svname -H | awk '$2 != "-" {print $1}'`
 [ -z "$datasets" ] &&  diag_plan_skip "no lustre datasets" >&2
 
+num_datasets=$(echo $datasets | wc -w)
+num_tests=0
+[ -n "${DIAG_ZFS_RECORDSIZE}" ]  && num_tests=$((num_tests+1))
+[ -n "${DIAG_ZFS_DNODESIZE}" ]  && num_tests=$((num_tests+1))
+[ -n "${DIAG_ZFS_XATTR}" ]  && num_tests=$((num_tests+1))
+[ -n "${DIAG_ZFS_CANMOUNT}" ]  && num_tests=$((num_tests+1))
+
 # number of tests
-diag_plan "4"
+diag_plan $((num_tests * num_datasets))
 
 #
 # Main
