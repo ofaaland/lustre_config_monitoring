@@ -20,7 +20,7 @@ source ${NODEDIAGDIR:-/etc/nodediag.d}/functions-tap || exit 1
 diag_handle_args "$@"
 
 # dont run if no zfs gender
-#( ! nodeattr -v zfs ) && diag_plan_skip "not configured"
+( ! nodeattr -v zfs ) && diag_plan_skip "not configured"
 
 # find lustre datasets
 datasets=`zfs list -o name,lustre:svname -H | awk '$2 != "-" {print $1}'`
