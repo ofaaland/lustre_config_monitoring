@@ -27,7 +27,7 @@ datasets=`zfs list -o name,lustre:svname -H | awk '$2 != "-" {print $1}'`
 [ -z "$datasets" ] &&  diag_plan_skip "no lustre datasets" >&2
 
 # number of tests
-diag_plan "2"
+diag_plan "4"
 
 #
 # Main
@@ -52,36 +52,44 @@ do
 	if [ -n "${DIAG_ZFS_RECORDSIZE}" ] ; then
 		recordsize=`zfs list -H -o recordsize ${dataset}`
 		if [ ${recordsize} != ${DIAG_ZFS_RECORDSIZE} ] ; then
-			diag_fail "recordsize ${recordsize}, expected ${DIAG_ZFS_RECORDSIZE}" >&2
+			diag_fail "dataset ${dataset} recordsize ${recordsize}, expected ${DIAG_ZFS_RECORDSIZE}" >&2
 		else
 			diag_ok "recordsize ${recordsize} OK" >&2
 		fi
+	else
+		echo "No check indicated for DIAG_ZFS_RECORDSIZE"
 	fi
 
 	if [ -n "${DIAG_ZFS_DNODESIZE}" ] ; then
 		dnodesize=`zfs list -H -o dnodesize ${dataset}`
 		if [ ${dnodesize} != ${DIAG_ZFS_DNODESIZE} ] ; then
-			diag_fail "dnodesize ${dnodesize}, expected ${DIAG_ZFS_DNODESIZE}" >&2
+			diag_fail "dataset ${dataset} dnodesize ${dnodesize}, expected ${DIAG_ZFS_DNODESIZE}" >&2
 		else
 			diag_ok "dnodesize ${dnodesize} OK" >&2
 		fi
+	else
+		echo "No check indicated for DIAG_ZFS_DNODESIZE"
 	fi
 
 	if [ -n "${DIAG_ZFS_XATTR}" ] ; then
 		xattr=`zfs list -H -o xattr ${dataset}`
 		if [ ${xattr} != ${DIAG_ZFS_XATTR} ] ; then
-			diag_fail "xattr ${xattr}, expected ${DIAG_ZFS_XATTR}" >&2
+			diag_fail "dataset ${dataset} xattr ${xattr}, expected ${DIAG_ZFS_XATTR}" >&2
 		else
 			diag_ok "xattr ${xattr} OK" >&2
 		fi
+	else
+		echo "No check indicated for DIAG_ZFS_XATTR"
 	fi
 
 	if [ -n "${DIAG_ZFS_CANMOUNT}" ] ; then
 		canmount=`zfs list -H -o canmount ${dataset}`
 		if [ ${canmount} != ${DIAG_ZFS_CANMOUNT} ] ; then
-			diag_fail "canmount ${canmount}, expected ${DIAG_ZFS_CANMOUNT}" >&2
+			diag_fail "dataset ${dataset} canmount ${canmount}, expected ${DIAG_ZFS_CANMOUNT}" >&2
 		else
 			diag_ok "canmount ${canmount} OK" >&2
 		fi
+	else
+		echo "No check indicated for DIAG_ZFS_CANMOUNT"
 	fi
 done
