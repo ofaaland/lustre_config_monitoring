@@ -52,7 +52,7 @@ do
 		if [ ${recordsize} != ${DIAG_ZFS_RECORDSIZE} ] ; then
 			diag_fail "dataset ${dataset} recordsize ${recordsize}, expected ${DIAG_ZFS_RECORDSIZE}" >&2
 		else
-			diag_ok "recordsize ${recordsize} OK" >&2
+			diag_ok "dataset ${dataset} recordsize ${recordsize} OK" >&2
 		fi
 	else
 		echo "No check indicated for DIAG_ZFS_RECORDSIZE"
@@ -63,7 +63,7 @@ do
 		if [ ${dnodesize} != ${DIAG_ZFS_DNODESIZE} ] ; then
 			diag_fail "dataset ${dataset} dnodesize ${dnodesize}, expected ${DIAG_ZFS_DNODESIZE}" >&2
 		else
-			diag_ok "dnodesize ${dnodesize} OK" >&2
+			diag_ok "dataset ${dataset} dnodesize ${dnodesize} OK" >&2
 		fi
 	else
 		echo "No check indicated for DIAG_ZFS_DNODESIZE"
@@ -74,7 +74,7 @@ do
 		if [ ${xattr} != ${DIAG_ZFS_XATTR} ] ; then
 			diag_fail "dataset ${dataset} xattr ${xattr}, expected ${DIAG_ZFS_XATTR}" >&2
 		else
-			diag_ok "xattr ${xattr} OK" >&2
+			diag_ok "dataset ${dataset} xattr ${xattr} OK" >&2
 		fi
 	else
 		echo "No check indicated for DIAG_ZFS_XATTR"
@@ -85,7 +85,7 @@ do
 		if [ ${canmount} != ${DIAG_ZFS_CANMOUNT} ] ; then
 			diag_fail "dataset ${dataset} canmount ${canmount}, expected ${DIAG_ZFS_CANMOUNT}" >&2
 		else
-			diag_ok "canmount ${canmount} OK" >&2
+			diag_ok "dataset ${dataset} canmount ${canmount} OK" >&2
 		fi
 	else
 		echo "No check indicated for DIAG_ZFS_CANMOUNT"
