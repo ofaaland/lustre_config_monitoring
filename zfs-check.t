@@ -48,8 +48,8 @@ do
 	# [ $target_type != "mgs" -a $target_type != "mdt" -a $target_type != "ost" ] &&  diag_skip "unrecognized lustre target type" >&2
 
 	if [ -n "${DIAG_ZFS_RECORDSIZE}" ] ; then
-		recordsize=`zfs list -H -o recordsize ${dataset}`
-		if [ ${recordsize} != ${DIAG_ZFS_RECORDSIZE} ] ; then
+		recordsize=`zfs list -H -o recordsize ${dataset} 2>/dev/null`
+		if [ "${recordsize}" != ${DIAG_ZFS_RECORDSIZE} ] ; then
 			diag_fail "dataset ${dataset} recordsize ${recordsize}, expected ${DIAG_ZFS_RECORDSIZE}" >&2
 		else
 			diag_ok "dataset ${dataset} recordsize ${recordsize} OK" >&2
@@ -59,8 +59,8 @@ do
 	fi
 
 	if [ -n "${DIAG_ZFS_DNODESIZE}" ] ; then
-		dnodesize=`zfs list -H -o dnodesize ${dataset}`
-		if [ ${dnodesize} != ${DIAG_ZFS_DNODESIZE} ] ; then
+		dnodesize=`zfs list -H -o dnodesize ${dataset} 2>/dev/null`
+		if [ "${dnodesize}" != ${DIAG_ZFS_DNODESIZE} ] ; then
 			diag_fail "dataset ${dataset} dnodesize ${dnodesize}, expected ${DIAG_ZFS_DNODESIZE}" >&2
 		else
 			diag_ok "dataset ${dataset} dnodesize ${dnodesize} OK" >&2
@@ -70,8 +70,8 @@ do
 	fi
 
 	if [ -n "${DIAG_ZFS_XATTR}" ] ; then
-		xattr=`zfs list -H -o xattr ${dataset}`
-		if [ ${xattr} != ${DIAG_ZFS_XATTR} ] ; then
+		xattr=`zfs list -H -o xattr ${dataset} 2>/dev/null`
+		if [ "${xattr}" != ${DIAG_ZFS_XATTR} ] ; then
 			diag_fail "dataset ${dataset} xattr ${xattr}, expected ${DIAG_ZFS_XATTR}" >&2
 		else
 			diag_ok "dataset ${dataset} xattr ${xattr} OK" >&2
@@ -81,8 +81,8 @@ do
 	fi
 
 	if [ -n "${DIAG_ZFS_CANMOUNT}" ] ; then
-		canmount=`zfs list -H -o canmount ${dataset}`
-		if [ ${canmount} != ${DIAG_ZFS_CANMOUNT} ] ; then
+		canmount=`zfs list -H -o canmount ${dataset} 2>/dev/null`
+		if [ "${canmount}" != ${DIAG_ZFS_CANMOUNT} ] ; then
 			diag_fail "dataset ${dataset} canmount ${canmount}, expected ${DIAG_ZFS_CANMOUNT}" >&2
 		else
 			diag_ok "dataset ${dataset} canmount ${canmount} OK" >&2
