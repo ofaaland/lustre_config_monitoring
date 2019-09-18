@@ -40,15 +40,6 @@ diag_plan $((num_tests * num_datasets))
 # Main
 #
 
-# For datasets:
-# with property lustre:svname
-
-# Need to test:
-# dnodesize=auto
-# xatttr=sa
-# canmount=off
-# recordsize=(128K on MDTs, 1M on OSTs, 128K on MGS)
-
 for dataset in ${datasets}
 do
 	# Maybe unnecessary
