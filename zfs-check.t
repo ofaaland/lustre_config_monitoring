@@ -58,45 +58,33 @@ function verify_property {
 }
 
 verify_property mds/mdt1 recordsize 128K
+echo >&2
 
 for dataset in ${datasets}
 do
-	if [ -n "${DIAG_ZFS_RECORDSIZE[0]}" ] ; then
-		verify_property ${dataset} recordsize ${DIAG_ZFS_RECORDSIZE[0]}
-	else
-		echo "No check indicated for DIAG_ZFS_RECORDSIZE"
-	fi
+	for idx in ${!DIAG_ZFS_DATASET_NAME[@]}
+	do
+		dsetglob=${DIAG_ZFS_DATASET_NAME[$idx]}
 
-	if [ -n "${DIAG_ZFS_DNODESIZE}" ] ; then
-		dnodesize=`zfs list -H -o dnodesize ${dataset} 2>/dev/null`
-		if [ "${dnodesize}" != ${DIAG_ZFS_DNODESIZE} ] ; then
-			diag_fail "dataset ${dataset} dnodesize ${dnodesize}, expected ${DIAG_ZFS_DNODESIZE}" >&2
-		else
-			diag_ok "dataset ${dataset} dnodesize ${dnodesize} OK" >&2
+		if [[ ! ${dataset} =~ ${dsetglob} ]]; then
+			continue
 		fi
-	else
-		echo "No check indicated for DIAG_ZFS_DNODESIZE"
-	fi
 
-	if [ -n "${DIAG_ZFS_XATTR}" ] ; then
-		xattr=`zfs list -H -o xattr ${dataset} 2>/dev/null`
-		if [ "${xattr}" != ${DIAG_ZFS_XATTR} ] ; then
-			diag_fail "dataset ${dataset} xattr ${xattr}, expected ${DIAG_ZFS_XATTR}" >&2
-		else
-			diag_ok "dataset ${dataset} xattr ${xattr} OK" >&2
+		if [ -n "${DIAG_ZFS_RECORDSIZE[0]}" ] ; then
+			verify_property ${dataset} recordsize ${DIAG_ZFS_RECORDSIZE[$idx]}
 		fi
-	else
-		echo "No check indicated for DIAG_ZFS_XATTR"
-	fi
 
-	if [ -n "${DIAG_ZFS_CANMOUNT}" ] ; then
-		canmount=`zfs list -H -o canmount ${dataset} 2>/dev/null`
-		if [ "${canmount}" != ${DIAG_ZFS_CANMOUNT} ] ; then
-			diag_fail "dataset ${dataset} canmount ${canmount}, expected ${DIAG_ZFS_CANMOUNT}" >&2
-		else
-			diag_ok "dataset ${dataset} canmount ${canmount} OK" >&2
+		if [ -n "${DIAG_ZFS_DNODESIZE[0]}" ] ; then
+			verify_property ${dataset} dnodesize ${DIAG_ZFS_DNODESIZE[$idx]}
 		fi
-	else
-		echo "No check indicated for DIAG_ZFS_CANMOUNT"
-	fi
+
+		if [ -n "${DIAG_ZFS_XATTR[0]}" ] ; then
+			verify_property ${dataset} xattr ${DIAG_ZFS_XATTR[$idx]}
+		fi
+
+		if [ -n "${DIAG_ZFS_CANMOUNT[0]}" ] ; then
+			verify_property ${dataset} canmount ${DIAG_ZFS_CANMOUNT[$idx]}
+		fi
+	done
+	echo >&2
 done
