@@ -13,21 +13,6 @@ diag_handle_args "$@"
 datasets=`zfs list -H | awk '{print $1}'`
 [ -z "$datasets" ] &&  diag_plan_skip "no ZFS datasets" >&2
 
-num_datasets=$(echo $datasets | wc -w)
-num_tests=0
-[ -n "${DIAG_ZFS_RECORDSIZE}" ]  && num_tests=$((num_tests+1))
-[ -n "${DIAG_ZFS_DNODESIZE}" ]  && num_tests=$((num_tests+1))
-[ -n "${DIAG_ZFS_XATTR}" ]  && num_tests=$((num_tests+1))
-[ -n "${DIAG_ZFS_CANMOUNT}" ]  && num_tests=$((num_tests+1))
-[ -n "${DIAG_ZFS_COMPRESSION}" ]  && num_tests=$((num_tests+1))
-
-# number of tests
-diag_plan $((num_tests * num_datasets))
-
-#
-# Main
-#
-
 function verify_property {
 	local fname="verify_property"
 	local dataset=$1
@@ -57,8 +42,20 @@ function verify_property {
 	fi
 }
 
-verify_property mds/mdt1 recordsize 128K
-echo >&2
+num_datasets=$(echo $datasets | wc -w)
+num_tests=0
+[ -n "${DIAG_ZFS_RECORDSIZE[0]}" ]  && num_tests=$((num_tests+1))
+[ -n "${DIAG_ZFS_DNODESIZE[0]}" ]  && num_tests=$((num_tests+1))
+[ -n "${DIAG_ZFS_XATTR[0]}" ]  && num_tests=$((num_tests+1))
+[ -n "${DIAG_ZFS_CANMOUNT[0]}" ]  && num_tests=$((num_tests+1))
+[ -n "${DIAG_ZFS_COMPRESSION[0]}" ]  && num_tests=$((num_tests+1))
+
+# number of tests
+diag_plan $((num_tests * num_datasets))
+
+#
+# Main
+#
 
 for dataset in ${datasets}
 do
