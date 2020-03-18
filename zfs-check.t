@@ -85,6 +85,10 @@ do
 		if [ -n "${DIAG_ZFS_CANMOUNT[0]}" ] ; then
 			verify_property ${dataset} canmount ${DIAG_ZFS_CANMOUNT[$idx]}
 		fi
+
+		if [ -n "${DIAG_ZFS_COMPRESSION[0]}" ] ; then
+			verify_property ${dataset} compression ${DIAG_ZFS_COMPRESSION[$idx]}
+		fi
 	done
 	echo >&2
 done
