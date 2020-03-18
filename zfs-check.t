@@ -28,15 +28,41 @@ diag_plan $((num_tests * num_datasets))
 # Main
 #
 
+function verify_property {
+	local fname="verify_property"
+	local dataset=$1
+	local propname=$2
+	local expectedval=$3
+
+	if [ -z "$dataset" ]; then
+		echo "BUG: $fname missing argument dataset" >&2
+		exit 1
+	fi
+
+	if [ -z "$propname" ]; then
+		echo "BUG: $fname missing argument propname" >&2
+		exit 1
+	fi
+
+	if [ -z "$expectedval" ]; then
+		echo "BUG: $fname missing argument expectedval" >&2
+		exit 1
+	fi
+
+	propval=`zfs list -H -o ${propname} ${dataset} 2>/dev/null`
+	if [ "${propval}" != ${expectedval} ] ; then
+		diag_fail "dataset ${dataset} property ${propname} is ${propval}, expected ${expectedval}" >&2
+	else
+		diag_ok "dataset ${dataset} property ${propname} is ${propval}" >&2
+	fi
+}
+
+verify_property mds/mdt1 recordsize 128K
+
 for dataset in ${datasets}
 do
-	if [ -n "${DIAG_ZFS_RECORDSIZE}" ] ; then
-		recordsize=`zfs list -H -o recordsize ${dataset} 2>/dev/null`
-		if [ "${recordsize}" != ${DIAG_ZFS_RECORDSIZE} ] ; then
-			diag_fail "dataset ${dataset} recordsize ${recordsize}, expected ${DIAG_ZFS_RECORDSIZE}" >&2
-		else
-			diag_ok "dataset ${dataset} recordsize ${recordsize} OK" >&2
-		fi
+	if [ -n "${DIAG_ZFS_RECORDSIZE[0]}" ] ; then
+		verify_property ${dataset} recordsize ${DIAG_ZFS_RECORDSIZE[0]}
 	else
 		echo "No check indicated for DIAG_ZFS_RECORDSIZE"
 	fi
