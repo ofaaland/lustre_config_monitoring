@@ -11,7 +11,7 @@ source ${NODEDIAGDIR:-/etc/nodediag.d}/functions-tap || exit 1
 diag_handle_args "$@"
 
 datasets=`zfs list -H | awk '{print $1}'`
-[ -z "$datasets" ] &&  diag_plan_skip "no lustre datasets" >&2
+[ -z "$datasets" ] &&  diag_plan_skip "no ZFS datasets" >&2
 
 num_datasets=$(echo $datasets | wc -w)
 num_tests=0
@@ -19,6 +19,7 @@ num_tests=0
 [ -n "${DIAG_ZFS_DNODESIZE}" ]  && num_tests=$((num_tests+1))
 [ -n "${DIAG_ZFS_XATTR}" ]  && num_tests=$((num_tests+1))
 [ -n "${DIAG_ZFS_CANMOUNT}" ]  && num_tests=$((num_tests+1))
+[ -n "${DIAG_ZFS_COMPRESSION}" ]  && num_tests=$((num_tests+1))
 
 # number of tests
 diag_plan $((num_tests * num_datasets))
