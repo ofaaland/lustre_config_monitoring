@@ -42,28 +42,49 @@ function verify_property {
 	fi
 }
 
+function handle_test {
+	local fname="handle_test"
+	local pool=$1
+	local propname=$2
+	local expectedval=$3
+	local action=$4
+	
+	if [ -z "$action" ]; then
+		echo "BUG: $fname missing argument action" >&2
+		exit 1
+	fi
+
+	if [ "$action" = "count_tests" ] ; then
+		num_tests=$((num_tests+1))
+	else
+		verify_property ${pool} ${propname} ${expectedval}
+	fi
+}
+
+function foreach_pool_and_property {
+	local action=$1
+
+	for pool in ${pools}
+	do
+		for idx in ${!DIAG_ZPOOL_NAME[@]}
+		do
+			poolregex=${DIAG_ZPOOL_NAME[$idx]}
+
+			if [[ ! ${pool} =~ ${poolregex} ]]; then
+				continue
+			fi
+
+			handle_test ${pool} autoreplace ${DIAG_ZPOOL_AUTOREPLACE[$idx]} $action
+			handle_test ${pool} multihost   ${DIAG_ZPOOL_MULTIHOST[$idx]}   $action
+		done
+	done
+}
+
 #
 # number of tests
 #
 num_tests=0
-for pool in ${pools}
-do
-	for idx in ${!DIAG_ZPOOL_NAME[@]}
-	do
-		poolregex=${DIAG_ZPOOL_NAME[$idx]}
-
-		if [[ ! ${pool} =~ ${poolregex} ]]; then
-			continue
-		fi
-		if [ -n "${DIAG_ZPOOL_AUTOREPLACE[$idx]}" ] ; then
-			num_tests=$((num_tests+1))
-		fi
-
-		if [ -n "${DIAG_ZPOOL_MULTIHOST[$idx]}" ] ; then
-			num_tests=$((num_tests+1))
-		fi
-	done
-done
+foreach_pool_and_property count_tests
 [ $num_tests -eq 0 ] &&  diag_plan_skip "no ZFS pool checks" >&2
 diag_plan $num_tests
 
@@ -71,23 +92,4 @@ diag_plan $num_tests
 # Main
 #
 
-for pool in ${pools}
-do
-	for idx in ${!DIAG_ZPOOL_NAME[@]}
-	do
-		poolregex=${DIAG_ZPOOL_NAME[$idx]}
-
-		if [[ ! ${pool} =~ ${poolregex} ]]; then
-			continue
-		fi
-
-		if [ -n "${DIAG_ZPOOL_AUTOREPLACE[$idx]}" ] ; then
-			verify_property ${pool} autoreplace ${DIAG_ZPOOL_AUTOREPLACE[$idx]}
-		fi
-
-		if [ -n "${DIAG_ZPOOL_MULTIHOST[$idx]}" ] ; then
-			verify_property ${pool} multihost ${DIAG_ZPOOL_MULTIHOST[$idx]}
-		fi
-	done
-	echo >&2
-done
+foreach_pool_and_property  do_tests
