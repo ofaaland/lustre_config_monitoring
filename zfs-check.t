@@ -70,23 +70,23 @@ do
 			continue
 		fi
 
-		if [ -n "${DIAG_ZFS_RECORDSIZE[0]}" ] ; then
+		if [ -n "${DIAG_ZFS_RECORDSIZE[$idx]}" ] ; then
 			verify_property ${dataset} recordsize ${DIAG_ZFS_RECORDSIZE[$idx]}
 		fi
 
-		if [ -n "${DIAG_ZFS_DNODESIZE[0]}" ] ; then
+		if [ -n "${DIAG_ZFS_DNODESIZE[$idx]}" ] ; then
 			verify_property ${dataset} dnodesize ${DIAG_ZFS_DNODESIZE[$idx]}
 		fi
 
-		if [ -n "${DIAG_ZFS_XATTR[0]}" ] ; then
+		if [ -n "${DIAG_ZFS_XATTR[$idx]}" ] ; then
 			verify_property ${dataset} xattr ${DIAG_ZFS_XATTR[$idx]}
 		fi
 
-		if [ -n "${DIAG_ZFS_CANMOUNT[0]}" ] ; then
+		if [ -n "${DIAG_ZFS_CANMOUNT[$idx]}" ] ; then
 			verify_property ${dataset} canmount ${DIAG_ZFS_CANMOUNT[$idx]}
 		fi
 
-		if [ -n "${DIAG_ZFS_COMPRESSION[0]}" ] ; then
+		if [ -n "${DIAG_ZFS_COMPRESSION[$idx]}" ] ; then
 			verify_property ${dataset} compression ${DIAG_ZFS_COMPRESSION[$idx]}
 		fi
 	done
