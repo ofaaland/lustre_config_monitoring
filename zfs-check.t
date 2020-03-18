@@ -42,16 +42,42 @@ function verify_property {
 	fi
 }
 
-num_datasets=$(echo $datasets | wc -w)
-num_tests=0
-[ -n "${DIAG_ZFS_RECORDSIZE[0]}" ]  && num_tests=$((num_tests+1))
-[ -n "${DIAG_ZFS_DNODESIZE[0]}" ]  && num_tests=$((num_tests+1))
-[ -n "${DIAG_ZFS_XATTR[0]}" ]  && num_tests=$((num_tests+1))
-[ -n "${DIAG_ZFS_CANMOUNT[0]}" ]  && num_tests=$((num_tests+1))
-[ -n "${DIAG_ZFS_COMPRESSION[0]}" ]  && num_tests=$((num_tests+1))
-
+#
 # number of tests
-diag_plan $((num_tests * num_datasets))
+#
+num_tests=0
+for dataset in ${datasets}
+do
+	for idx in ${!DIAG_ZFS_DATASET_NAME[@]}
+	do
+		dsetglob=${DIAG_ZFS_DATASET_NAME[$idx]}
+
+		if [[ ! ${dataset} =~ ${dsetglob} ]]; then
+			continue
+		fi
+
+		if [ -n "${DIAG_ZFS_RECORDSIZE[$idx]}" ] ; then
+			num_tests=$((num_tests+1))
+		fi
+
+		if [ -n "${DIAG_ZFS_DNODESIZE[$idx]}" ] ; then
+			num_tests=$((num_tests+1))
+		fi
+
+		if [ -n "${DIAG_ZFS_XATTR[$idx]}" ] ; then
+			num_tests=$((num_tests+1))
+		fi
+
+		if [ -n "${DIAG_ZFS_CANMOUNT[$idx]}" ] ; then
+			num_tests=$((num_tests+1))
+		fi
+
+		if [ -n "${DIAG_ZFS_COMPRESSION[$idx]}" ] ; then
+			num_tests=$((num_tests+1))
+		fi
+	done
+done
+diag_plan $num_tests
 
 #
 # Main
