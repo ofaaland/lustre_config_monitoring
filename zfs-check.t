@@ -29,11 +29,6 @@ diag_plan $((num_tests * num_datasets))
 
 for dataset in ${datasets}
 do
-	# Maybe unnecessary
-	# target_type=`zfs list -o lustre:svname -H $dataset | sed 's/^.*-//' | cut -c 1-3 | tr [:upper:] [:lower:]`
-	# [ -z "$target_type" ] && diag_skip "unable to parse lustre target name" >&2
-	# [ $target_type != "mgs" -a $target_type != "mdt" -a $target_type != "ost" ] &&  diag_skip "unrecognized lustre target type" >&2
-
 	if [ -n "${DIAG_ZFS_RECORDSIZE}" ] ; then
 		recordsize=`zfs list -H -o recordsize ${dataset} 2>/dev/null`
 		if [ "${recordsize}" != ${DIAG_ZFS_RECORDSIZE} ] ; then
