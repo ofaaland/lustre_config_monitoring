@@ -1,16 +1,7 @@
 #!/bin/bash
-###########################################################################
-# $URL: file:///var/svn/cfengine3/operating_systems/toss/3/tut/toss-check.t $
-# $Author: faaland1 $
-# $Date: 2018-10-17 14:16:09 -0700 (Wed, 17 Oct 2018) $
-# $Rev: 14610 $
-###########################################################################
-
-# check that node is running correct toss version, yum groups,
-# and installed rpms are correct
+# check that ZFS dataset properties are set as specified
 
 export PATH=/bin:/usr/bin:/sbin:/usr/sbin
-
 
 declare -r description="Check zfs dataset properties"
 
@@ -19,11 +10,7 @@ source ${NODEDIAGDIR:-/etc/nodediag.d}/functions-tap || exit 1
 
 diag_handle_args "$@"
 
-# dont run if no zfs gender
-( ! nodeattr -v zfs ) && diag_plan_skip "not configured"
-
-# Test Lustre datasets only; identified by property lustre:svname
-datasets=`zfs list -o name,lustre:svname -H | awk '$2 != "-" {print $1}'`
+datasets=`zfs list -H | awk '{print $1}'`
 [ -z "$datasets" ] &&  diag_plan_skip "no lustre datasets" >&2
 
 num_datasets=$(echo $datasets | wc -w)
